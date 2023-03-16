@@ -1,0 +1,83 @@
+<div class="row">
+    <h1>Datos del Formulario</h1>
+    
+    <div class="input-group mb-3">
+        <div class="input-group-prepend">
+            <span class="input-group-text">Numero</span>
+        </div>
+        <input type="text" class="form-control" (keyup)="onKey($event)"  #Value name="numero" >
+    </div>
+    <div class="input-group mb-3">
+        <div class="input-group-prepend">
+            <span class="input-group-text">Modelo</span>
+        </div>
+        <label class="form-control" #Modelo name="modelo">{{forms[numero-1]?.modelo}}</label>
+    </div>
+    <div class="input-group mb-3">
+        <div class="input-group-prepend">
+            <span class="input-group-text">Nombre del propietario</span>
+        </div>
+        <label class="form-control" #Nombre name="nombre">{{forms[numero-1]?.nombre}}</label>
+    </div>
+    <div class="input-group mb-3">
+        <div class="input-group-prepend">
+            <span class="input-group-text">Fecha deseada de entrega</span>
+        </div>
+        <label class="form-control " #Fecha name="fecha">{{forms[numero-1]?.fecha}}</label>
+    </div>
+    <div *ngIf="forms[numero-1]?.informacion == true">
+        <div class="input-group mb-3">
+            <div class="input-group-prepend">
+                <span class="input-group-text">Email</span>
+            </div>
+            <label class="form-control " #Email name="email">{{forms[numero-1]?.email}}</label>
+        </div>
+    </div>
+    <div *ngIf="forms[numero-1]?.personalizar == true">
+        <div class="input-group mb-3">
+            <div class="input-group-prepend">
+                <span class="input-group-text">Color de matricula </span>
+            </div>
+            <label class="form-control " #Matricula name="matricula">{{forms[numero-1]?.matricula}}</label>
+        </div>
+        <div class="input-group mb-3">
+            <div class="input-group-prepend">
+                <span class="input-group-text">Texto de la matricula</span>
+            </div>
+            <label class="form-control" name="matriculaText" #MatriculaText >{{forms[numero-1]?.matriculaText}}</label>
+        </div>
+    </div>
+    <div class="input-group mb-3">
+        <div class="input-group-prepend">
+            <span class="input-group-text">Color del coche</span>
+        </div>
+        <input type="color" class="form-control"  #Color name="color" value="{{forms[numero-1]?.color}}" disabled>
+    </div>
+    <br><br><br>
+    <table>
+        <tr>
+            <th>N.Producto</th>
+            <th>Modelo</th>
+            <th>Nombre</th>
+            <th>Fecha</th>
+            <th>Email</th>
+            <th>Matricula</th>
+            <th>MatriculaText</th>
+            <th>Color</th>
+        </tr>
+        <ng-container *ngFor="let form of forms ; index as i">
+            <tr>
+                <td>{{i +1}}</td>
+                <td>{{form.modelo}}</td>
+                <td>{{form.nombre}}</td>
+                <td>{{form.fecha}}</td>
+                <td>{{form.email}}</td>
+                <td>{{form.matricula}}</td>
+                <td>{{form.matriculaText}}</td>
+                <td style="background-color: {{form.color}};">{{form.color}}</td>
+
+            </tr>
+        </ng-container>
+    </table>
+
+</div>
