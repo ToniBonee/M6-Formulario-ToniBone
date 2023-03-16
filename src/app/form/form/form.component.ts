@@ -1,5 +1,5 @@
 import { Component,  ElementRef , ViewChild } from '@angular/core';
-import { FormGroup, FormControl, Validators  } from '@angular/forms';
+import { FormGroup, FormControl, Validators ,AbstractControl ,ValidationErrors ,ValidatorFn } from '@angular/forms';
 import { FormsService } from 'src/services/formServices';
 
 @Component({
@@ -10,11 +10,12 @@ import { FormsService } from 'src/services/formServices';
 
 export class FormComponent {
   forms:Form[] = [ ];
-  modelo: FormControl = new FormControl('', [Validators.required,Validators.pattern('[0-9]*')]);
-  nombre: FormControl = new FormControl('',[Validators.required,Validators.pattern('[a-zA-Z]*')]);
+  inapropNombres = ["hitler" ,"franco", "susanaoria","cipote","prepucio","pollita","polla" , "pene" , "pito" , "coño" ,"vajina" , "bajina", "vagina" , "bagina" , "bob" ];
+  modelo: FormControl = new FormControl('', [Validators.required,Validators.maxLength(20),Validators.minLength(3),Validators.pattern('[0-9]*')]);
+  nombre: FormControl = new FormControl('',[Validators.required,Validators.pattern('[ñA-Za-z _]*[ñA-Za-z][ñA-Za-z _]*'),forbiddenNameValidator( this.inapropNombres )]);
   fecha: FormControl = new FormControl('', Validators.required);
   informacion: FormControl = new FormControl('');
-  email: FormControl = new FormControl('' ,[Validators.maxLength(250),Validators.minLength(5),Validators.pattern(/.+@.+\..+/),Validators.email]);
+  email: FormControl = new FormControl('' ,[Validators.pattern(/.+@.+\..+/)]);
   personalizar: FormControl = new FormControl('');
   matricula: FormControl = new FormControl('');
   matriculaText: FormControl = new FormControl('');
@@ -34,6 +35,7 @@ export class FormComponent {
   });
   mostrarEm = false;
   mostrarC = false;
+
   constructor(private formService:FormsService) { }
   @ViewChild('Nombre') elementNombre!: ElementRef;
   @ViewChild('Value') elementValue!: ElementRef;
@@ -43,6 +45,7 @@ export class FormComponent {
   @ViewChild('Matricula') elementMatricula!: ElementRef;
   @ViewChild('MatriculaText') elementMatriculaText!: ElementRef;
   @ViewChild('Color') elementColor!: ElementRef;
+  
   mostrarMat(){
     if(this.mostrarC == true){
       this.mostrarC = false;
@@ -59,19 +62,18 @@ export class FormComponent {
   mostrarIn(){
     if(this.mostrarEm == true){
       this.mostrarEm = false;
-      this.Form.get('email')?.setValidators([Validators.maxLength(250),Validators.minLength(5),Validators.pattern(/.+@.+\..+/)]);
+      this.Form.get('email')?.setValidators([Validators.pattern(/.+@.+\..+/)]);
       this.Form.get('email')?.reset('');
       this.Form.get('email')?.updateValueAndValidity();
       
     }else{
       this.mostrarEm = true;
-      this.Form.get('email')?.setValidators([Validators.required,Validators.maxLength(250),Validators.minLength(5),Validators.pattern(/.+@.+\..+/)]);
+      this.Form.get('email')?.setValidators([Validators.required,Validators.pattern(/.+@.+\..+/)]);
       this.Form.get('email')?.updateValueAndValidity();
       
     }
     
   }
-  
   customVal(politicas: FormControl) {
     if (politicas.value == false) {
       return politicas;
@@ -79,7 +81,6 @@ export class FormComponent {
       return null
     }
   }
-  
   Clic(datos: FormGroup ) { 
     console.log(datos);
     console.log(this.modelo.value);
@@ -92,3 +93,11 @@ export class FormComponent {
 
 }
 export interface Form{modelo: number  ;nombre: string;  fecha: string;  informacion: boolean;  email: string;  personalizar: boolean; matricula: string; matriculaText: string  ;color: string; politicas: boolean; }
+
+
+export function forbiddenNameValidator(forbiddenNames: string[]): ValidatorFn {
+  return (control: AbstractControl): {[key: string]: any} | null => {
+    const forbidden = forbiddenNames.includes(control.value);
+    return forbidden ? { forbiddenName: { value: control.value } } : null;
+  };
+}

@@ -61,12 +61,7 @@ export class ViewComponent {
       this.elementColor.nativeElement.value = this.color; 
   
     }
-    /*
-    if( this.elementValue.nativeElement.value  > 0 || this.elementValue.nativeElement.value == null  ){
-      
-    }else{
-      
-    }*/
+    
     }
 
 }
